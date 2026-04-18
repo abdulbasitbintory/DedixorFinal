@@ -23,6 +23,9 @@ export interface Service {
   title: string
   description: string | null
   icon: string | null
+  details: string[] | null
+  pricing: string | null
+  gradient: string | null
   featured: boolean
   created_at: Date
   updated_at: Date
@@ -118,8 +121,8 @@ export const db = {
     },
     create: async (data: Omit<Service, 'id' | 'created_at' | 'updated_at'>): Promise<Service> => {
       const result = await sql`
-        INSERT INTO services (title, description, icon, featured)
-        VALUES (${data.title}, ${data.description}, ${data.icon}, ${data.featured ?? false})
+        INSERT INTO services (title, description, icon, details, pricing, gradient, featured)
+        VALUES (${data.title}, ${data.description}, ${data.icon}, ${data.details}, ${data.pricing}, ${data.gradient}, ${data.featured ?? false})
         RETURNING *
       `
       return result[0] as Service
@@ -131,6 +134,9 @@ export const db = {
           title = COALESCE(${data.title ?? null}, title),
           description = COALESCE(${data.description ?? null}, description),
           icon = COALESCE(${data.icon ?? null}, icon),
+          details = COALESCE(${data.details ?? null}, details),
+          pricing = COALESCE(${data.pricing ?? null}, pricing),
+          gradient = COALESCE(${data.gradient ?? null}, gradient),
           featured = COALESCE(${data.featured ?? null}, featured),
           updated_at = NOW()
         WHERE id = ${id}

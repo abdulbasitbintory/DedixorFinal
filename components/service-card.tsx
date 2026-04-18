@@ -4,11 +4,12 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Check, ArrowRight, type LucideIcon } from "lucide-react"
+import { Check, ArrowRight } from "lucide-react"
+import * as Icons from "lucide-react"
 
 interface Service {
   title: string
-  icon: LucideIcon
+  icon: string
   description: string
   details: string[]
   pricing: string
@@ -22,7 +23,7 @@ interface ServiceCardProps {
 
 export function ServiceCard({ service, index }: ServiceCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
-  const Icon = service.icon
+  const Icon = (Icons as any)[service.icon] || Icons.Zap
 
   return (
     <motion.div

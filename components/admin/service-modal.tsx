@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
+import { IconPicker } from "@/components/icon-picker"
 import type { AdminService } from "@/types/admin"
 
 const serviceFormSchema = z.object({
@@ -116,15 +117,15 @@ export function ServiceModal({ open, onOpenChange, service, onSave }: ServiceMod
               )}
             />
 
-            {/* Icon */}
+            {/* Icon Picker */}
             <FormField
               control={form.control}
               name="icon"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Icon Name</FormLabel>
+                  <FormLabel>Icon</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Globe, Smartphone, Palette" {...field} />
+                    <IconPicker value={field.value || ""} onChange={field.onChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
