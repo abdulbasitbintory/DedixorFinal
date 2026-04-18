@@ -42,6 +42,7 @@
     "@supabase/ssr": "^0.10.2",
     "@tanstack/react-table": "latest",
     "@types/react-google-recaptcha": "^2.1.9",
+    "@vercel/postgres": "^0.10.0",
     "autoprefixer": "^10.4.20",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
