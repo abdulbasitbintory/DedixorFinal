@@ -23,6 +23,9 @@ export const serviceSchema = z.object({
   title: z.string().min(3).max(100),
   description: z.string().min(10).max(500).nullable().optional(),
   icon: z.string().nullable().optional(),
+  details: z.array(z.string()).nullable().optional(),
+  pricing: z.string().nullable().optional(),
+  gradient: z.string().nullable().optional(),
   featured: z.boolean().optional().default(false),
 })
 

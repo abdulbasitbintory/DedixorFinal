@@ -17,6 +17,9 @@ export interface AdminService {
   title: string
   description: string | null
   icon: string | null
+  details: string[] | null
+  pricing: string | null
+  gradient: string | null
   featured: boolean
   created_at?: Date
   updated_at?: Date

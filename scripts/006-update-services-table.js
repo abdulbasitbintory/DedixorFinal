@@ -12,7 +12,7 @@ async function updateServicesTable() {
       AND column_name IN ('details', 'pricing', 'gradient')
     `
 
-    const existingColumns = result.rows.map((row) => row.column_name)
+    const existingColumns = (result || []).map((row) => row.column_name)
 
     // Add missing columns
     if (!existingColumns.includes("details")) {

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -24,6 +24,9 @@ const serviceFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(100),
   description: z.string().max(500).optional(),
   icon: z.string().max(100).optional(),
+  details: z.array(z.string()).optional(),
+  pricing: z.string().max(255).optional(),
+  gradient: z.string().max(255).optional(),
   featured: z.boolean().optional().default(false),
 })
 
@@ -37,12 +40,16 @@ interface ServiceModalProps {
 }
 
 export function ServiceModal({ open, onOpenChange, service, onSave }: ServiceModalProps) {
+  const [detailInput, setDetailInput] = useState("")
   const form = useForm<ServiceFormValues>({
     resolver: zodResolver(serviceFormSchema),
     defaultValues: {
       title: "",
       description: "",
       icon: "",
+      details: [],
+      pricing: "",
+      gradient: "",
       featured: false,
     },
   })
@@ -53,6 +60,9 @@ export function ServiceModal({ open, onOpenChange, service, onSave }: ServiceMod
         title: service.title,
         description: service.description || "",
         icon: service.icon || "",
+        details: service.details || [],
+        pricing: service.pricing || "",
+        gradient: service.gradient || "",
         featured: service.featured || false,
       })
     } else {
@@ -60,6 +70,9 @@ export function ServiceModal({ open, onOpenChange, service, onSave }: ServiceMod
         title: "",
         description: "",
         icon: "",
+        details: [],
+        pricing: "",
+        gradient: "",
         featured: false,
       })
     }
@@ -71,8 +84,29 @@ export function ServiceModal({ open, onOpenChange, service, onSave }: ServiceMod
       title: values.title,
       description: values.description || null,
       icon: values.icon || null,
+      details: values.details || null,
+      pricing: values.pricing || null,
+      gradient: values.gradient || null,
       featured: values.featured || false,
     })
+  }
+
+  const addDetail = () => {
+    if (detailInput.trim()) {
+      const currentDetails = form.getValues("details") || []
+      if (!currentDetails.includes(detailInput.trim())) {
+        form.setValue("details", [...currentDetails, detailInput.trim()])
+      }
+      setDetailInput("")
+    }
+  }
+
+  const removeDetail = (detail: string) => {
+    const currentDetails = form.getValues("details") || []
+    form.setValue(
+      "details",
+      currentDetails.filter((d) => d !== detail),
+    )
   }
 
   return (
@@ -117,6 +151,52 @@ export function ServiceModal({ open, onOpenChange, service, onSave }: ServiceMod
               )}
             />
 
+            {/* Details */}
+            <FormField
+              control={form.control}
+              name="details"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Service Details</FormLabel>
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Add a service detail"
+                        value={detailInput}
+                        onChange={(e) => setDetailInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault()
+                            addDetail()
+                          }
+                        }}
+                      />
+                      <Button type="button" onClick={addDetail} size="sm">
+                        Add
+                      </Button>
+                    </div>
+                    {field.value && field.value.length > 0 && (
+                      <div className="space-y-2">
+                        {field.value.map((detail, index) => (
+                          <div key={index} className="flex items-center justify-between bg-muted p-2 rounded">
+                            <span className="text-sm">{detail}</span>
+                            <button
+                              type="button"
+                              onClick={() => removeDetail(detail)}
+                              className="text-destructive text-sm hover:underline"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             {/* Icon Picker */}
             <FormField
               control={form.control}
@@ -126,6 +206,36 @@ export function ServiceModal({ open, onOpenChange, service, onSave }: ServiceMod
                   <FormLabel>Icon</FormLabel>
                   <FormControl>
                     <IconPicker value={field.value || ""} onChange={field.onChange} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Pricing */}
+            <FormField
+              control={form.control}
+              name="pricing"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Pricing</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., Starting at $5,000" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Gradient */}
+            <FormField
+              control={form.control}
+              name="gradient"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Gradient</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., from-blue-500/20 via-cyan-500/20 to-teal-500/20" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

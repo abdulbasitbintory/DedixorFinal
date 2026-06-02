@@ -38,6 +38,9 @@ export async function createService(data: ServiceInput) {
       title: validatedData.title,
       description: validatedData.description ?? null,
       icon: validatedData.icon ?? null,
+      details: validatedData.details ?? null,
+      pricing: validatedData.pricing ?? null,
+      gradient: validatedData.gradient ?? null,
       featured: validatedData.featured ?? false,
     })
 
@@ -71,6 +74,9 @@ export async function updateService(id: number, data: Partial<ServiceInput>) {
       title: validatedData.title,
       description: validatedData.description,
       icon: validatedData.icon,
+      details: validatedData.details,
+      pricing: validatedData.pricing,
+      gradient: validatedData.gradient,
       featured: validatedData.featured,
     })
 
