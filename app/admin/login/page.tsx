@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { loginAction } from './actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Loader2, Lock } from 'lucide-react'
 
 export default function AdminLoginPage() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -22,7 +24,9 @@ export default function AdminLoginPage() {
     try {
       const result = await loginAction(email, password)
       
-      if (!result.success) {
+      if (result.success) {
+        router.push('/admin')
+      } else {
         setError(result.error || 'Login failed')
       }
     } catch (err) {

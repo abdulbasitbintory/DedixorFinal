@@ -79,6 +79,9 @@ export default function AdminServicesPage() {
           title: service.title,
           description: service.description,
           icon: service.icon,
+          details: service.details,
+          pricing: service.pricing,
+          gradient: service.gradient,
           featured: service.featured,
         })
 
