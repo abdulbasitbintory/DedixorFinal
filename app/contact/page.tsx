@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useRef } from "react"
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react"
 import { Card } from "@/components/ui/card"
@@ -12,7 +12,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import { Navigation } from "@/components/navigation"
-import ReCAPTCHA from "react-google-recaptcha"
 
 const contactInfo = [
   {
@@ -42,21 +41,10 @@ export default function ContactPage() {
     email: "",
     message: "",
   })
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null)
-  const recaptchaRef = useRef<ReCAPTCHA>(null)
   const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    if (!recaptchaToken) {
-      toast({
-        title: "reCAPTCHA required",
-        description: "Please complete the reCAPTCHA verification.",
-        variant: "destructive",
-      })
-      return
-    }
 
     setIsSubmitting(true)
 
@@ -64,7 +52,7 @@ export default function ContactPage() {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, recaptchaToken }),
+        body: JSON.stringify(formData),
       })
 
       const result = await response.json()
@@ -75,8 +63,6 @@ export default function ContactPage() {
           description: "We'll get back to you as soon as possible.",
         })
         setFormData({ name: "", email: "", message: "" })
-        recaptchaRef.current?.reset()
-        setRecaptchaToken(null)
       } else {
         toast({
           title: "Error",
@@ -174,15 +160,6 @@ export default function ContactPage() {
                       className="bg-background/50 resize-none"
                     />
                   </div>
-
-                  {/* ReCAPTCHA */}
-                  <ReCAPTCHA
-                    ref={recaptchaRef}
-                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-                    theme="dark"
-                    onChange={(token) => setRecaptchaToken(token)}
-                    onExpired={() => setRecaptchaToken(null)}
-                  />
 
                   <Button type="submit" className="w-full" disabled={isSubmitting}>
                     {isSubmitting ? (
