@@ -9,11 +9,11 @@ import * as Icons from "lucide-react"
 
 interface Service {
   title: string
-  icon: string
-  description: string
-  details: string[]
-  pricing: string
-  gradient: string
+  icon: string | null
+  description: string | null
+  details: string[] | null
+  pricing: string | null
+  gradient: string | null
 }
 
 interface ServiceCardProps {

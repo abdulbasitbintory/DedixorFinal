@@ -4,15 +4,25 @@ import { db } from "@/lib/db"
 
 async function getServices() {
   try {
-    const services = await db.services.findMany()
-    return services.filter(
-      (service) =>
-        service.title &&
-        service.description &&
-        service.icon &&
-        service.details &&
-        service.pricing &&
-        service.gradient,
+    const allServices = await db.services.findMany()
+    return allServices.filter(
+      (service): service is typeof allServices[0] & {
+        title: string
+        description: string
+        icon: string
+        details: string[]
+        pricing: string
+        gradient: string
+      } =>
+        !!(
+          service.title &&
+          service.description &&
+          service.icon &&
+          Array.isArray(service.details) &&
+          service.details.length > 0 &&
+          service.pricing &&
+          service.gradient
+        ),
     )
   } catch (error) {
     console.error("Error fetching services:", error)
